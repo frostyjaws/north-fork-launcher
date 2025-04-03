@@ -1,6 +1,5 @@
 
-# FINAL app.py - North Fork Launcher
-# Real logic included — production-ready
+# FINAL app.py with all spreadsheet logic enforced on PNG upload
 
 import streamlit as st
 import pandas as pd
@@ -98,7 +97,7 @@ if uploaded_file:
 
     try:
         shopify_df = pd.read_csv("templates/Baby Onesie Shopify Flat File.csv")
-        for i in range(1, 10):
+        for i in range(1, 11):  # rows 2 through 11
             shopify_df.loc[i, 'Handle'] = f"{filename_base}baby-bodysuit-clothes-bodysuit-newborn"
             shopify_df.loc[i, 'Title'] = f"{display_title} - Baby Bodysuit Clothes Bodysuit Newborn"
         shopify_df.loc[1, 'Image Src'] = image_url
