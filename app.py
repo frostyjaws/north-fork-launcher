@@ -1,6 +1,4 @@
 
-# FINAL app.py with all spreadsheet logic enforced on PNG upload
-
 import streamlit as st
 import pandas as pd
 import openpyxl
@@ -90,14 +88,17 @@ dry_run = st.checkbox("DRY RUN (no live upload)", value=True)
 uploaded_file = st.file_uploader("Upload your mockup PNG", type=["png"])
 
 if uploaded_file:
-    filename_base = uploaded_file.name.replace("-mockup.png", "").replace(".png", "").replace(" ", "").replace("'", "")
-    display_title = uploaded_file.name.replace("-mockup.png", "").replace(".png", "")
+    filename_raw = uploaded_file.name.replace("-mockup.png", "").replace(".png", "").replace("'", "")
+    filename_base = filename_raw.replace(" ", "")  # no spaces
+    display_title = filename_raw.replace("-", " ").title()  # title case, spaced
+
     image_url = f"https://cdn.shopify.com/s/files/1/placeholder/{filename_base}.png"
     st.success(f"Mock image URL: {image_url}")
 
+    # Shopify CSV logic
     try:
         shopify_df = pd.read_csv("templates/Baby Onesie Shopify Flat File.csv")
-        for i in range(1, 11):  # rows 2 through 11
+        for i in range(1, 12):  # rows 2 through 11
             shopify_df.loc[i, 'Handle'] = f"{filename_base}baby-bodysuit-clothes-bodysuit-newborn"
             shopify_df.loc[i, 'Title'] = f"{display_title} - Baby Bodysuit Clothes Bodysuit Newborn"
         shopify_df.loc[1, 'Image Src'] = image_url
@@ -109,6 +110,7 @@ if uploaded_file:
     except Exception as e:
         st.error(f"Shopify CSV error: {e}")
 
+    # Amazon Flat File logic
     try:
         wb = openpyxl.load_workbook("templates/Baby Onesie Amazon Flat File.xlsx")
         ws = wb.active
