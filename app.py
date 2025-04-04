@@ -1,5 +1,5 @@
 
-# ✅ FULL REAL app.py — North Fork Launcher
+# ✅ REAL app.py with visual Shopify + Amazon sections
 
 import streamlit as st
 import pandas as pd
@@ -92,7 +92,7 @@ if uploaded_file:
     product_title = f"{formatted_title} - Baby Bodysuit Clothes Bodysuit Newborn"
     image_url = f"https://cdn.shopify.com/s/files/1/placeholder/{filename_base}.png"
 
-    # Update Shopify CSV
+    st.subheader("✅ Shopify Spreadsheet")
     try:
         shopify_path = "templates/Baby Onesie Shopify Flat File.csv"
         df = pd.read_csv(shopify_path)
@@ -101,12 +101,13 @@ if uploaded_file:
         df.loc[1, 'Image Src'] = image_url
         output_csv = f"{filename_base}_Shopify.csv"
         df.to_csv(output_csv, index=False)
+        st.success("✅ Shopify spreadsheet generated!")
         with open(output_csv, "rb") as f:
             st.download_button("Download Shopify CSV", f, file_name=output_csv)
     except Exception as e:
         st.error(f"Shopify file error: {e}")
 
-    # Update Amazon XLSM
+    st.subheader("✅ Amazon Spreadsheet")
     try:
         amazon_path = "templates/Baby Onesie Amazon Flat File.xlsm"
         wb = openpyxl.load_workbook(amazon_path)
@@ -126,13 +127,14 @@ if uploaded_file:
 
         amazon_output = f"{filename_base}_Amazon.xlsm"
         wb.save(amazon_output)
+        st.success("✅ Amazon spreadsheet generated!")
         with open(amazon_output, "rb") as f:
             st.download_button("Download Amazon Flat File", f, file_name=amazon_output)
     except Exception as e:
         st.error(f"Amazon file error: {e}")
 
-    # Live submission block
-    if st.button("Submit to Shopify + Amazon"):
+    st.subheader("Submit to Shopify + Amazon")
+    if st.button("Submit Live"):
         if dry_run:
             st.warning("DRY RUN is ON — no live submission.")
         else:
