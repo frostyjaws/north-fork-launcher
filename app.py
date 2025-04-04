@@ -96,7 +96,6 @@ if uploaded_file:
     image_url = f"https://cdn.shopify.com/s/files/1/placeholder/{filename_base}.png"
     st.success(f"Mock image URL: {image_url}")
 
-    # Shopify CSV update
     try:
         shopify_df = pd.read_csv("templates/Baby Onesie Shopify Flat File.csv")
         for i in range(1, 12):
@@ -104,14 +103,13 @@ if uploaded_file:
             shopify_df.loc[i, 'Title'] = f"{display_title} - Baby Bodysuit Clothes Bodysuit Newborn"
         shopify_df.loc[1, 'Image Src'] = image_url
         shopify_df.loc[2, 'Image Src'] = "https://cdn.shopify.com/s/files/1/0545/2018/5017/files/12efccc074d5a78e78e3e0be1150e85c5302d855_aa77eee7-fccd-4fab-85f0-338ada8776b7.jpg?v=1743071089"
-        output_name = f"{filename_base}_Shopify.csv"
-        shopify_df.to_csv(output_name, index=False)
-        with open(output_name, "rb") as f:
-            st.download_button("Download Shopify CSV", f, file_name=output_name)
+        shopify_name = f"{filename_base}_Shopify.csv"
+        shopify_df.to_csv(shopify_name, index=False)
+        with open(shopify_name, "rb") as f:
+            st.download_button("Download Shopify CSV", f, file_name=shopify_name)
     except Exception as e:
         st.error(f"Shopify CSV error: {e}")
 
-    # Amazon flat file update
     try:
         wb = openpyxl.load_workbook("templates/Baby Onesie Amazon Flat File.xlsx")
         ws = wb.active
@@ -119,9 +117,8 @@ if uploaded_file:
         ws["B4"] = f"{filename_base}-Parent"
         ws["E4"] = f"{display_title} - Baby Bodysuit Clothes Bodysuit Newborn"
         for row in range(5, 32):
-            suffix = f"Var{row-4}"
             ws[f"A{row}"] = "leotard"
-            ws[f"B{row}"] = f"{filename_base}-{suffix}"
+            ws[f"B{row}"] = f"{filename_base}-Var{row-4}"
             ws[f"E{row}"] = f"{display_title} - Baby Bodysuit Clothes Bodysuit Newborn"
             ws[f"T{row}"] = image_url
         amazon_name = f"{filename_base}_Amazon.xlsx"
