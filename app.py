@@ -96,22 +96,22 @@ if uploaded_file:
     image_url = f"https://cdn.shopify.com/s/files/1/placeholder/{filename_base}.png"
     st.success(f"Mock image URL: {image_url}")
 
-    # Shopify file generation
+    # Shopify CSV update
     try:
         shopify_df = pd.read_csv("templates/Baby Onesie Shopify Flat File.csv")
-        for i in range(1, 12):  # Rows 2–11
+        for i in range(1, 12):
             shopify_df.loc[i, 'Handle'] = f"{filename_base}baby-bodysuit-clothes-bodysuit-newborn"
             shopify_df.loc[i, 'Title'] = f"{display_title} - Baby Bodysuit Clothes Bodysuit Newborn"
         shopify_df.loc[1, 'Image Src'] = image_url
         shopify_df.loc[2, 'Image Src'] = "https://cdn.shopify.com/s/files/1/0545/2018/5017/files/12efccc074d5a78e78e3e0be1150e85c5302d855_aa77eee7-fccd-4fab-85f0-338ada8776b7.jpg?v=1743071089"
-        shopify_filename = f"{display_title.replace(' ', '')}_Shopify.csv"
-        shopify_df.to_csv(shopify_filename, index=False)
-        with open(shopify_filename, "rb") as f:
-            st.download_button("Download Shopify CSV", f, file_name=shopify_filename)
+        output_name = f"{filename_base}_Shopify.csv"
+        shopify_df.to_csv(output_name, index=False)
+        with open(output_name, "rb") as f:
+            st.download_button("Download Shopify CSV", f, file_name=output_name)
     except Exception as e:
         st.error(f"Shopify CSV error: {e}")
 
-    # Amazon flat file generation
+    # Amazon flat file update
     try:
         wb = openpyxl.load_workbook("templates/Baby Onesie Amazon Flat File.xlsx")
         ws = wb.active
@@ -124,10 +124,10 @@ if uploaded_file:
             ws[f"B{row}"] = f"{filename_base}-{suffix}"
             ws[f"E{row}"] = f"{display_title} - Baby Bodysuit Clothes Bodysuit Newborn"
             ws[f"T{row}"] = image_url
-        amazon_filename = f"{display_title.replace(' ', '')}_Amazon.xlsx"
-        wb.save(amazon_filename)
-        with open(amazon_filename, "rb") as f:
-            st.download_button("Download Amazon Flat File", f, file_name=amazon_filename)
+        amazon_name = f"{filename_base}_Amazon.xlsx"
+        wb.save(amazon_name)
+        with open(amazon_name, "rb") as f:
+            st.download_button("Download Amazon Flat File", f, file_name=amazon_name)
     except Exception as e:
         st.error(f"Amazon flat file error: {e}")
 
